@@ -3,347 +3,377 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoverGalaxy</title>
+    <title>CoverGalaxy — Archive</title>
     <style>
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.12);
-            --liquid-sheen: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.25) 100%);
-            --text-main: #ffffff;
-            --text-muted: #c2bdd4;
-            --font-round: 'Segoe UI Variable Text', system-ui, -apple-system, sans-serif;
+            --glass-card: rgba(18, 16, 28, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-glow: rgba(255, 255, 255, 0.03);
+            --text-primary: #ffffff;
+            --text-secondary: #9b97b0;
+            --accent-glow: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%);
+            --font-display: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         body {
-            font-family: var(--font-round);
+            font-family: var(--font-display);
             background-image: url('https://img.magnific.com/free-vector/realistic-galaxy-background_23-2148991322.jpg?semt=ais_hybrid&w=740&q=80');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            color: var(--text-main);
+            color: var(--text-primary);
             margin: 0;
             padding: 0;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .scrim-overlay {
-            background-color: rgba(6, 4, 15, 0.7);
+        .app-container {
+            background-color: rgba(4, 3, 10, 0.65);
             min-height: 100vh;
-            width: 100%;
+            display: flex;
+            flex-direction: column;
             box-sizing: border-box;
-            padding: 40px 20px;
+            padding: 60px 20px;
         }
 
         header {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 60px;
         }
 
         header h1 {
-            font-size: 2.8rem;
+            font-size: 3rem;
             font-weight: 700;
-            margin: 0 0 8px 0;
+            letter-spacing: -0.03em;
+            margin: 0 0 10px 0;
         }
 
         header p {
-            color: var(--text-muted);
+            color: var(--text-secondary);
             margin: 0;
             font-size: 1.1rem;
+            font-weight: 400;
         }
 
-        /* --- NAVIGATION BARS --- */
-        .nav-header {
+        /* --- NAVIGATION --- */
+        .navigation-row {
             max-width: 1100px;
-            margin: 0 auto 30px auto;
+            margin: 0 auto 40px auto;
+            width: 100%;
             display: flex;
             align-items: center;
-            gap: 15px;
         }
 
-        .back-btn {
-            background: rgba(255,255,255,0.1);
+        .action-back-btn {
+            background: rgba(255, 255, 255, 0.06);
             border: 1px solid var(--glass-border);
-            padding: 10px 20px;
-            border-radius: 40px;
-            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            color: var(--text-primary);
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.95rem;
-            transition: 0.2s;
+            font-size: 0.9rem;
+            transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+            font-family: var(--font-display);
         }
 
-        .back-btn:hover {
-            background: rgba(255,255,255,0.2);
-            transform: translateX(-3px);
+        .action-back-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
+            border-color: rgba(255,255,255,0.2);
         }
 
-        /* --- APPLE LIQUID GLASS MORPHISM --- */
-        .liquid-glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(30px) saturate(210%);
-            -webkit-backdrop-filter: blur(30px) saturate(210%);
+        /* --- CORE LIQUID GLASS FRAMEWORK --- */
+        .glass-frame {
+            background: var(--glass-card);
+            backdrop-filter: blur(40px) saturate(200%);
+            -webkit-backdrop-filter: blur(40px) saturate(200%);
             border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            box-shadow: 
-                0 10px 40px rgba(0, 0, 0, 0.4),
-                inset 0 1px 1px rgba(255, 255, 255, 0.2),
-                inset 0 10px 20px rgba(255, 255, 255, 0.05);
+            border-radius: 28px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             position: relative;
             overflow: hidden;
         }
 
-        .liquid-glass::before {
+        .glass-frame::before {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: var(--liquid-sheen);
+            background: var(--accent-glow);
             pointer-events: none;
             z-index: 1;
         }
 
-        /* --- PAGE VIEWS (SWITCHABLE) --- */
-        .view-section {
+        /* --- SWITCHABLE ENGINE --- */
+        .app-view {
             display: none;
             max-width: 1100px;
             margin: 0 auto;
-            animation: fadeIn 0.4s ease forwards;
+            width: 100%;
+            animation: viewTransition 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        .view-section.active {
+        .app-view.active {
             display: block;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes viewTransition {
+            from { opacity: 0; transform: scale(0.99) translateY(8px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        /* --- VIEW 1: PLATFORM HUBS --- */
-        .hub-grid {
+        /* --- SCREEN 1: CONSOLE HUB --- */
+        .hub-layout {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
         }
 
-        .console-poster {
-            height: 350px;
+        .console-panel-card {
+            height: 360px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            padding: 40px 20px;
+            padding: 50px 30px;
             cursor: pointer;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s;
             box-sizing: border-box;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .console-poster:hover {
-            transform: scale(1.03) translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        .console-panel-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.25);
+            background: rgba(24, 21, 38, 0.75);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
         }
 
-        .poster-logo {
-            max-width: 65%;
-            max-height: 100px;
+        .brand-vector {
+            max-width: 70%;
+            max-height: 90px;
             object-fit: contain;
-            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4));
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
             z-index: 2;
             margin-top: auto;
             margin-bottom: auto;
         }
 
-        .poster-info {
+        .brand-meta-label {
             z-index: 2;
             text-align: center;
             width: 100%;
         }
 
-        .poster-info h2 {
-            margin: 0 0 6px 0;
-            font-size: 1.5rem;
+        .brand-meta-label h2 {
+            margin: 0;
+            font-size: 1.6rem;
             font-weight: 600;
+            letter-spacing: -0.02em;
         }
 
-        /* --- VIEW 2: GAME POSTER TILES --- */
-        .catalog-grid {
+        /* --- SCREEN 2: GAME GRID --- */
+        .catalog-layout {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 30px;
         }
 
-        .game-poster-card {
+        .game-tile-poster {
             cursor: pointer;
-            border-radius: 18px;
+            border-radius: 20px;
             overflow: hidden;
-            transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .game-poster-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.7);
+        .game-tile-poster:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.7);
+            border-color: rgba(255,255,255,0.2);
         }
 
-        .poster-art-wrapper {
-            height: 280px;
+        .poster-image-frame {
+            height: 300px;
             background-size: cover;
             background-position: center;
-            position: relative;
+            background-color: rgba(0,0,0,0.2);
         }
 
-        .poster-title-bar {
-            padding: 12px;
+        .poster-caption-strip {
+            padding: 16px;
             text-align: center;
-            background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(10px);
+            background: rgba(10, 8, 18, 0.6);
+            backdrop-filter: blur(20px);
             font-weight: 600;
             font-size: 0.95rem;
+            border-top: 1px solid rgba(255,255,255,0.04);
         }
 
-        /* --- VIEW 3: DEDICATED GAME ASSET PAGE --- */
-        .asset-page-layout {
+        /* --- SCREEN 3: ASSET PAGE --- */
+        .asset-split-workspace {
             display: grid;
             grid-template-columns: 1fr;
             gap: 30px;
         }
 
-        @media (min-width: 768px) {
-            .asset-page-layout { grid-template-columns: 2fr 1fr; }
+        @media (min-width: 850px) {
+            .asset-split-workspace { grid-template-columns: 2.2fr 1fr; }
         }
 
-        .media-workspace {
+        .gallery-canvas {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 30px;
-            padding: 40px;
+            gap: 40px;
+            padding: 50px;
+            align-items: center;
+            justify-content: center;
         }
 
-        .asset-block {
+        .gallery-canvas.single-item-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .media-asset-group {
             display: flex;
             flex-direction: column;
             align-items: center;
-            text-align: center;
             z-index: 2;
+            width: 100%;
         }
 
-        .asset-title-tag {
+        .asset-group-header {
             font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            margin-bottom: 15px;
+            letter-spacing: 1.5px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
             font-weight: 700;
         }
 
-        .render-box {
+        .asset-preview-render {
             width: 100%;
-            height: 280px;
+            height: 320px;
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
-            filter: drop-shadow(0 12px 20px rgba(0,0,0,0.6));
+            filter: drop-shadow(0 20px 35px rgba(0,0,0,0.65));
         }
 
-        .render-box.disc-style {
+        .asset-preview-render.disc-shape {
             border-radius: 50%;
-            width: 220px;
-            height: 220px;
-            border: 1px solid rgba(255,255,255,0.2);
+            width: 250px;
+            height: 250px;
+            border: 1px solid rgba(255,255,255,0.12);
         }
 
-        .render-box.cartridge-style {
-            width: 160px;
-            height: 220px;
+        .asset-preview-render.cartridge-shape {
+            width: 180px;
+            height: 250px;
             border-radius: 8px;
         }
 
-        .side-meta-panel {
-            padding: 30px;
+        /* SIDEBAR PROPORTIONS */
+        .sidebar-panel {
+            padding: 40px 30px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
-        .meta-info-specs h2 { margin: 0 0 10px 0; font-size: 1.8rem; }
-        .meta-info-specs span { background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; }
+        .sidebar-meta-block h2 {
+            margin: 0 0 12px 0;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
 
-        .download-action-stack {
+        .sidebar-meta-block span {
+            background: rgba(255,255,255,0.08);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .button-download-stack {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-top: 30px;
+            gap: 14px;
+            margin-top: 40px;
             z-index: 2;
         }
 
-        .glass-btn {
-            background: rgba(255,255,255,0.08);
+        .interactive-btn {
+            background: rgba(255, 255, 255, 0.06);
             border: 1px solid var(--glass-border);
-            padding: 16px;
-            border-radius: 12px;
-            color: white;
-            font-family: var(--font-round);
+            padding: 18px;
+            border-radius: 14px;
+            color: var(--text-primary);
+            font-family: var(--font-display);
             font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.2s;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .glass-btn:hover {
-            background: rgba(255,255,255,0.2);
-            border-color: #5ea3ff;
-            color: #5ea3ff;
+        .interactive-btn:hover {
+            background: rgba(255, 255, 255, 0.14);
+            border-color: rgba(255,255,255,0.3);
+            transform: translateY(-1px);
         }
     </style>
 </head>
 <body>
 
-    <div class="scrim-overlay">
+    <div class="app-container">
         
-        <header id="mainHeader">
+        <header id="appGlobalHeader">
             <h1>CoverGalaxy</h1>
-            <p>Cover Art For Games</p>
+            <p>Digital Preservation & High-Resolution Asset Vault</p>
         </header>
 
-        <section id="viewHub" class="view-section active">
-            <div class="hub-grid">
-                <div class="console-poster liquid-glass" onclick="navigateToCatalog('PlayStation 5')">
-                    <img class="poster-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/PlayStation_logo.svg/3840px-PlayStation_logo.svg.png" alt="PS">
-                    <div class="poster-info"><h2>PlayStation 5</h2></div>
+        <section id="screenHub" class="app-view active">
+            <div class="hub-layout">
+                <div class="console-panel-card glass-frame" onclick="openPlatformCatalog('PlayStation 5')">
+                    <img class="brand-vector" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/PlayStation_logo.svg/3840px-PlayStation_logo.svg.png" alt="PlayStation">
+                    <div class="brand-meta-label"><h2>PlayStation 5</h2></div>
                 </div>
-                <div class="console-poster liquid-glass" onclick="navigateToCatalog('Xbox Series X')">
-                    <img class="poster-logo" src="https://logos-world.net/wp-content/uploads/2020/11/Xbox-Emblem.png" alt="Xbox">
-                    <div class="poster-info"><h2>Xbox Series X</h2></div>
+                <div class="console-panel-card glass-frame" onclick="openPlatformCatalog('Xbox Series X')">
+                    <img class="brand-vector" src="https://logos-world.net/wp-content/uploads/2020/11/Xbox-Emblem.png" alt="Xbox">
+                    <div class="brand-meta-label"><h2>Xbox Series X</h2></div>
                 </div>
-                <div class="console-poster liquid-glass" onclick="navigateToCatalog('Nintendo Switch')">
-                    <img class="poster-logo" src="https://i.pinimg.com/originals/c7/c0/28/c7c02817fc0ca9cdc534bc615ba27d93.png?nii=t" alt="Nintendo">
-                    <div class="poster-info"><h2>Nintendo Switch</h2></div>
+                <div class="console-panel-card glass-frame" onclick="openPlatformCatalog('Nintendo Switch')">
+                    <img class="brand-vector" src="https://i.pinimg.com/originals/c7/c0/28/c7c02817fc0ca9cdc534bc615ba27d93.png?nii=t" alt="Nintendo">
+                    <div class="brand-meta-label"><h2>Nintendo Switch</h2></div>
                 </div>
             </div>
         </section>
 
-        <section id="viewCatalog" class="view-section">
-            <div class="nav-header">
-                <button class="back-btn" onclick="switchView('viewHub')">← Back to Consoles</button>
-                <h2 id="catalogPlatformTitle" style="margin:0;">Games</h2>
+        <section id="screenCatalog" class="app-view">
+            <div class="navigation-row">
+                <button class="action-back-btn" onclick="goToView('screenHub')">← Back to Platforms</button>
             </div>
-            <div class="catalog-grid" id="catalogGrid"></div>
+            <div class="catalog-layout" id="catalogInjectionGrid"></div>
         </section>
 
-        <section id="viewAssetPage" class="view-section">
-            <div class="nav-header">
-                <button class="back-btn" id="assetPageBackButton">← Back to Catalog</button>
+        <section id="screenAssetWorkspace" class="app-view">
+            <div class="navigation-row">
+                <button class="action-back-btn" id="workspaceNavigationBackTrigger">← Back to Catalog</button>
             </div>
             
-            <div class="asset-page-layout">
-                <div class="media-workspace liquid-glass" id="assetBoard"></div>
+            <div class="asset-split-workspace">
+                <div class="gallery-canvas glass-frame" id="displayBoard"></div>
                 
-                <div class="side-meta-panel liquid-glass">
-                    <div class="meta-info-specs">
-                        <span id="assetMetaConsole">Console</span>
-                        <h2 id="assetMetaTitle" style="margin-top:15px;">Game Title</h2>
-                        <p style="color: var(--text-muted); font-size:0.9rem; line-height:1.5;">Print specifications configured for standard dimensions at 300 DPI high-resolution output layouts.</p>
+                <div class="sidebar-panel glass-frame">
+                    <div class="sidebar-meta-block">
+                        <span id="metaPlatformBadge">Platform</span>
+                        <h2 id="metaGameTitle" style="margin-top:20px;">Game Title</h2>
                     </div>
-                    <div class="download-action-stack" id="actionStack"></div>
+                    <div class="button-download-stack" id="downloadButtonContainer"></div>
                 </div>
             </div>
         </section>
@@ -352,107 +382,122 @@
 
     <script>
         // ========================================================
-        //  THE MAIN REPOSITORY DATA TREE
+        //  DATABASE REGISTRY
+        //  Tip: Set mediaImg to "none" if there is no disc artwork!
         // ========================================================
         const GAME_DATABASE = [
+            {
+                title: "Resident Evil Requiem",
+                console: "PlayStation 5",
+                posterThumb: "https://image.api.playstation.com/vulcan/ap/rnd/202512/1205/e0364b3089bbbad7e0a04f87cab6c273172515a134efdf88.png", 
+                coverImg: "https://www.thecoverproject.net/uploads/pending/playstation_5.residentevilrequiem_EU.17740698031648829433.jpg", 
+                mediaImg: "none"
+            },
             {
                 title: "Cyber Net 2026",
                 console: "Nintendo Switch",
                 posterThumb: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=400",
                 coverImg: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800",
-                mediaImg: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=400" 
+                mediaImg: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=400"
             },
             {
-                title: "Resident Evil Requiem",
+                title: "Grand Theft Auto VI",
                 console: "PlayStation 5",
                 posterThumb: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=400",
-                coverImg: "https://www.thecoverproject.net/uploads/pending/playstation_5.residentevilrequiem_EU.17740698031648829433.jpg",
+                coverImg: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800",
                 mediaImg: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=400"
-            },
-            {
-                title: "Starfield Turbo",
-                console: "Xbox Series X",
-                posterThumb: "https://image.api.playstation.com/vulcan/ap/rnd/202512/1205/e0364b3089bbbad7e0a04f87cab6c273172515a134efdf88.png",
-                coverImg: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=800",
-                mediaImg: "https://images.unsplash.com/photo-1580234810907-b40315b76418?q=80&w=400"
             }
         ];
 
-        let activePlatform = "";
+        let selectedPlatform = "";
 
-        // CORE ROUTER VIEW CONTROLLER
-        function switchView(viewId) {
-            document.querySelectorAll('.view-section').forEach(view => view.classList.remove('active'));
+        function goToView(viewId) {
+            document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
-            
-            // Hide main global header on asset page to make room
-            document.getElementById('mainHeader').style.display = (viewId === 'viewAssetPage') ? 'none' : 'block';
+            document.getElementById('appGlobalHeader').style.display = (viewId === 'screenAssetWorkspace') ? 'none' : 'block';
         }
 
-        // STEP 1 -> STEP 2: OPEN PLATFORM COLLECTION (SHOW POSTERS)
-        function navigateToCatalog(platform) {
-            activePlatform = platform;
-            document.getElementById('catalogPlatformTitle').innerText = `${platform} Collection`;
-            
-            const grid = document.getElementById('catalogGrid');
+        function openPlatformCatalog(platform) {
+            selectedPlatform = platform;
+            const grid = document.getElementById('catalogInjectionGrid');
             grid.innerHTML = "";
 
-            const filteredGames = GAME_DATABASE.filter(g => g.console === platform);
+            const matches = GAME_DATABASE.filter(g => g.console === platform);
 
-            if(filteredGames.length === 0) {
-                grid.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:var(--text-muted);">No posters uploaded for this console line yet.</p>`;
+            if(matches.length === 0) {
+                grid.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:var(--text-secondary); padding:40px;">No covers found in this system category.</p>`;
             } else {
-                filteredGames.forEach(game => {
-                    const posterHTML = `
-                        <div class="game-poster-card liquid-glass" onclick="navigateToAssetPage('${game.title.replace(/'/g, "\\'")}')">
-                            <div class="poster-art-wrapper" style="background-image: url('${game.posterThumb}');"></div>
-                            <div class="poster-title-bar">${game.title}</div>
+                matches.forEach(game => {
+                    const cardHTML = `
+                        <div class="game-tile-poster glass-frame" onclick="openGameWorkspace('${game.title.replace(/'/g, "\\'")}')">
+                            <div class="poster-image-frame" style="background-image: url('${game.posterThumb}');"></div>
+                            <div class="poster-caption-strip">${game.title}</div>
                         </div>
                     `;
-                    grid.insertAdjacentHTML('beforeend', posterHTML);
+                    grid.insertAdjacentHTML('beforeend', cardHTML);
                 });
             }
-            switchView('viewCatalog');
+            goToView('screenCatalog');
         }
 
-        // STEP 2 -> STEP 3: OPEN SPECIFIC GAME PAGE
-        function navigateToAssetPage(gameTitle) {
+        function forceSystemDownload(url, filename) {
+            const downloadTrigger = document.createElement('a');
+            downloadTrigger.href = url;
+            downloadTrigger.download = filename;
+            downloadTrigger.target = '_blank';
+            document.body.appendChild(downloadTrigger);
+            downloadTrigger.click();
+            document.body.removeChild(downloadTrigger);
+        }
+
+        function openGameWorkspace(gameTitle) {
             const game = GAME_DATABASE.find(g => g.title === gameTitle);
             if(!game) return;
 
-            // Set up back button routing
-            document.getElementById('assetPageBackButton').onclick = () => navigateToCatalog(game.console);
+            document.getElementById('workspaceNavigationBackTrigger').onclick = () => openPlatformCatalog(game.console);
+            document.getElementById('metaPlatformBadge').innerText = game.console;
+            document.getElementById('metaGameTitle').innerText = game.title;
 
-            // Populate text parameters
-            document.getElementById('assetMetaConsole').innerText = game.console;
-            document.getElementById('assetMetaTitle').innerText = game.title;
+            const board = document.getElementById('displayBoard');
+            const buttonContainer = document.getElementById('downloadButtonContainer');
+            
+            const hasMedia = game.mediaImg && game.mediaImg.toLowerCase() !== 'none';
 
-            // Determine Media Styles dynamically
-            const isCart = game.console.includes("Nintendo");
-            const mediaLabel = isCart ? "Cartridge" : "Disc Art";
-            const mediaClass = isCart ? "cartridge-style" : "disc-style";
-
-            // Inject the Side-by-Side media elements
-            const board = document.getElementById('assetBoard');
-            board.innerHTML = `
-                <div class="asset-block">
-                    <span class="asset-title-tag">Full Wrapper Print Cover</span>
-                    <div class="render-box" style="background-image: url('${game.coverImg}');"></div>
-                </div>
-                <div class="asset-block">
-                    <span class="asset-title-tag">Physical ${mediaLabel} Asset</span>
-                    <div class="render-box ${mediaClass}" style="background-image: url('${game.mediaImg}');"></div>
+            let boardHTML = `
+                <div class="media-asset-group">
+                    <span class="asset-group-header">Full Wrap Cover</span>
+                    <div class="asset-preview-render" style="background-image: url('${game.coverImg}');"></div>
                 </div>
             `;
 
-            // Inject Custom Download Buttons
-            const stack = document.getElementById('actionStack');
-            stack.innerHTML = `
-                <button class="glass-btn" onclick="alert('Downloading printable layout for ${game.title}...')">Download Full Box Cover</button>
-                <button class="glass-btn" onclick="alert('Downloading printing template for ${game.title} ${mediaLabel}...')">Download ${mediaLabel} Label</button>
+            let actionHTML = `
+                <button class="interactive-btn" onclick="forceSystemDownload('${game.coverImg}', '${game.title.replace(/\s+/g, '_')}_Cover.jpg')">Download Cover</button>
             `;
 
-            switchView('viewAssetPage');
+            if (hasMedia) {
+                board.classList.remove('single-item-layout');
+                const isNintendo = game.console.includes("Nintendo");
+                const label = isNintendo ? "Cartridge" : "Disc Art";
+                const shapeClass = isNintendo ? "cartridge-shape" : "disc-shape";
+
+                boardHTML += `
+                    <div class="media-asset-group">
+                        <span class="asset-group-header">${label}</span>
+                        <div class="asset-preview-render ${shapeClass}" style="background-image: url('${game.mediaImg}');"></div>
+                    </div>
+                `;
+
+                actionHTML += `
+                    <button class="interactive-btn" onclick="forceSystemDownload('${game.mediaImg}', '${game.title.replace(/\s+/g, '_')}_Media.jpg')">Download ${label}</button>
+                `;
+            } else {
+                board.classList.add('single-item-layout');
+            }
+
+            board.innerHTML = boardHTML;
+            buttonContainer.innerHTML = actionHTML;
+
+            goToView('screenAssetWorkspace');
         }
     </script>
 </body>
